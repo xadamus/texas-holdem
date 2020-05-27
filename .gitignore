@@ -4,6 +4,9 @@
 ### Java ###
 *.class
 
+### Maven ###
+/model/target/*
+
 # BlueJ files
 *.ctxt
 
@@ -36,5 +39,4 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 # End of https://www.gitignore.io/api/java,gradle
-/model/build/tmp/jar/MANIFEST.MF
 /model/build/tmp/jar/MANIFEST.MF

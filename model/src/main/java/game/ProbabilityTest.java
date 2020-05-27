@@ -6,20 +6,16 @@ import entities.Player;
 import entities.Table;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static game.CardUtil.getHand;
 import static game.CardUtil.getMergedCardList;
 
-/**
- * Created by Adamus on 2016-04-14.
- */
-public class Test implements Runnable
+public class ProbabilityTest implements Runnable
 {
     public static void main(String[] args)
     {
-        Test tester = new Test();
+        ProbabilityTest tester = new ProbabilityTest();
         Thread t = new Thread(tester);
         t.start();
     }
@@ -28,7 +24,7 @@ public class Test implements Runnable
     private Player player;
     private int[] hands = new int[10];
 
-    public Test()
+    public ProbabilityTest()
     {
         table = new Table();
         player = new Player();
