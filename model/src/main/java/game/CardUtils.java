@@ -6,25 +6,50 @@ import entities.Hand;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CardUtil {
-    private CardUtil() {
+public class CardUtils {
+    private CardUtils() {
     }
 
-    public static List<Card> getMergedCardList(List<Card> playerCards, List<Card> tableCards) {
-        List<Card> cards = new ArrayList<>(tableCards);
-        cards.addAll(playerCards);
+    /**
+     * Merges two lists of cards into one list.
+     */
+    public static List<Card> mergeCardLists(List<Card> list1, List<Card> list2) {
+        List<Card> cards = new ArrayList<>(list1.size() + list2.size());
+        cards.addAll(list1);
+        cards.addAll(list2);
         return cards;
     }
 
-    public static List<Card> getHighestCards(List<Card> cards, int quantity) {
+    /**
+     * Picks certain amount of highest cards from given list.
+     *
+     * @param cards    list of cards to pick from
+     * @param quantity quantity of cards to pick. The number should
+     *                 be between 0 and size of the cards list.
+     */
+    public static List<Card> pickHighestCards(List<Card> cards, int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("negative quantity");
+        }
+        if (quantity > cards.size()) {
+            throw new IllegalArgumentException("quantity exceeded number of given cards");
+        }
+
+        if (quantity == 0) {
+            return Collections.emptyList();
+        }
         List<Card> hCards = new ArrayList<>(cards);
         Collections.sort(hCards);
         return hCards.subList(cards.size() - quantity, cards.size());
     }
 
-    public static Map<Card.Rank, Integer> getCardsMultiples(List<Card> cards) {
+    /**
+     * Finds cards rank multiples in the given list. The method takes into account
+     * only multiples above two.
+     */
+    public static Map<Card.Rank, Integer> findCardsRankMultiples(List<Card> cards) {
         ListIterator<Card> iter = cards.listIterator();
-        Map<Card.Rank, Integer> multiple = new HashMap<>(); // <wartość,ilość>
+        Map<Card.Rank, Integer> multiple = new EnumMap<>(Card.Rank.class);
         List<Card.Rank> ranks = new ArrayList<>();
 
         while (iter.hasNext()) {
@@ -94,30 +119,26 @@ public class CardUtil {
         return null;
     }
 
-    public static Hand getStraight(List<Card> cards, Map<Card.Rank, Integer> multiples) {
-        if (multiples.containsValue(2) || multiples.isEmpty()) {
-            List<Card> rCards = new ArrayList<>(5);
-            ListIterator<Card> iter = cards.listIterator();
+    public static Hand getStraight(List<Card> cards) {
+        List<Card> rCards = new ArrayList<>(5);
 
-            while (iter.hasNext()) {
-                Card card = iter.next();
-                ListIterator<Card> innerIter = cards.listIterator();
-                rCards.add(card);
+        for (Card card : cards) {
+            ListIterator<Card> innerIter = cards.listIterator();
+            rCards.add(card);
 
-                while (innerIter.hasNext()) {
-                    Card cCard = innerIter.next();
-                    if (((card.getRank().ordinal() + 1) == cCard.getRank().ordinal() && card != cCard) || (card.getRank() == Card.Rank.ACE && cCard.getRank() == Card.Rank.CARD_2)) {
-                        rCards.add(cCard);
-                        card = cCard;
-                    }
+            while (innerIter.hasNext()) {
+                Card cCard = innerIter.next();
+                if (((card.getRank().ordinal() + 1) == cCard.getRank().ordinal() && card != cCard) || (card.getRank() == Card.Rank.ACE && cCard.getRank() == Card.Rank.CARD_2)) {
+                    rCards.add(cCard);
+                    card = cCard;
                 }
-
-                if (rCards.size() == 5) {
-                    return new Hand(rCards, Hand.HandCategory.STRAIGHT);
-                } else rCards.clear();
             }
-            return null;
-        } else return null;
+
+            if (rCards.size() == 5) {
+                return new Hand(rCards, Hand.HandCategory.STRAIGHT);
+            } else rCards.clear();
+        }
+        return null;
     }
 
     public static Hand getThreeOfAKind(List<Card> cards, Map<Card.Rank, Integer> multiples) {
@@ -135,19 +156,16 @@ public class CardUtil {
     }
 
     public static Hand getPair(List<Card> cards, Map<Card.Rank, Integer> multiples, boolean twoPair) {
-        if (multiples.containsValue(2)) {
-            List<Card> rCards = new ArrayList<>();
-            SortedSet<Card.Rank> ranks = new TreeSet<>(multiples.keySet());
-            int pairNum = 0;
+        List<Card> rCards = new ArrayList<>();
+        int pairNum = 0;
 
-            for (Card.Rank rank : ranks) {
-                if (multiples.get(rank) == 2) {
-                    rCards.addAll(cards.stream().filter(card -> card.getRank() == rank).collect(Collectors.toList()));
-                    pairNum++;
+        for (Map.Entry<Card.Rank, Integer> entry : multiples.entrySet()) {
+            if (entry.getValue() == 2) {
+                rCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).collect(Collectors.toList()));
+                pairNum++;
 
-                    if ((twoPair) ? (pairNum == 2) : (pairNum == 1))
-                        return new Hand(rCards, (twoPair) ? Hand.HandCategory.TWO_PAIR : Hand.HandCategory.ONE_PAIR);
-                }
+                if (twoPair ? (pairNum == 2) : (pairNum == 1))
+                    return new Hand(rCards, (twoPair) ? Hand.HandCategory.TWO_PAIR : Hand.HandCategory.ONE_PAIR);
             }
         }
         return null;
@@ -155,7 +173,7 @@ public class CardUtil {
 
     public static Hand getHand(List<Card> cards) {
         Hand hand;
-        Map<Card.Rank, Integer> multiples = getCardsMultiples(cards);
+        Map<Card.Rank, Integer> multiples = findCardsRankMultiples(cards);
 
         hand = getFourOfAKind(cards, multiples);
         if (hand != null) return hand;
@@ -165,16 +183,13 @@ public class CardUtil {
 
         hand = getFlush(cards);
 
-        Hand straightHand = getStraight(cards, multiples);
-        if (straightHand != null) {
-            if (hand != null) // flush?
+        Hand straightHand = getStraight(cards);
+        if (straightHand != null && hand != null) { // flush?
+            if (straightHand.getHandCards().get(0).getRank() == Card.Rank.CARD_10) // royal flush?
             {
-                if (straightHand.getHandCards().get(0).getRank() == Card.Rank.CARD_10) // royal flush?
-                {
-                    return new Hand(straightHand.getHandCards(), Hand.HandCategory.ROYAL_FLUSH);
-                }
-                return new Hand(straightHand.getHandCards(), Hand.HandCategory.STRAIGHT_FLUSH);
+                return new Hand(straightHand.getHandCards(), Hand.HandCategory.ROYAL_FLUSH);
             }
+            return new Hand(straightHand.getHandCards(), Hand.HandCategory.STRAIGHT_FLUSH);
         }
 
         if (hand != null) return hand; // flush

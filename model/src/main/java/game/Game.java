@@ -5,10 +5,9 @@ import entities.Hand;
 import entities.Player;
 import entities.Table;
 
-import java.io.*;
 import java.util.*;
 
-import static game.CardUtil.*;
+import static game.CardUtils.*;
 
 public class Game
 {
@@ -28,9 +27,9 @@ public class Game
         table.addPlayer(player3);
         table.distributeCards();
 
-        List<Card> cardsP1 = getMergedCardList(Arrays.asList(player1.getCards()), table.getCards());
-        List<Card> cardsP2 = getMergedCardList(Arrays.asList(player2.getCards()), table.getCards());
-        List<Card> cardsP3 = getMergedCardList(Arrays.asList(player3.getCards()), table.getCards());
+        List<Card> cardsP1 = mergeCardLists(Arrays.asList(player1.getCards()), table.getCards());
+        List<Card> cardsP2 = mergeCardLists(Arrays.asList(player2.getCards()), table.getCards());
+        List<Card> cardsP3 = mergeCardLists(Arrays.asList(player3.getCards()), table.getCards());
 
         System.out.println(table);
 

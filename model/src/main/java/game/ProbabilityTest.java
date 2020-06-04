@@ -8,8 +8,8 @@ import entities.Table;
 import java.util.Arrays;
 import java.util.List;
 
-import static game.CardUtil.getHand;
-import static game.CardUtil.getMergedCardList;
+import static game.CardUtils.getHand;
+import static game.CardUtils.mergeCardLists;
 
 public class ProbabilityTest implements Runnable
 {
@@ -39,7 +39,7 @@ public class ProbabilityTest implements Runnable
         {
             table.distributeCards();
 
-            List<Card> cards = getMergedCardList(Arrays.asList(player.getCards()), table.getCards());
+            List<Card> cards = mergeCardLists(Arrays.asList(player.getCards()), table.getCards());
             Hand hand = getHand(cards);
 
             hands[hand.getHandCategory().ordinal()]++;

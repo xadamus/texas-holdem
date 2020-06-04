@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static game.CardUtil.*;
+import static game.CardUtils.*;
 
 public class Hand implements Comparable<Hand>
 {
@@ -52,8 +52,8 @@ public class Hand implements Comparable<Hand>
                     return this.handCards.get(0).compareTo(h.handCards.get(0));
 
                 case FULL_HOUSE:
-                    multiples1 = getCardsMultiples(this.handCards);
-                    multiples2 = getCardsMultiples(h.handCards);
+                    multiples1 = findCardsRankMultiples(this.handCards);
+                    multiples2 = findCardsRankMultiples(h.handCards);
                     hand1 = getThreeOfAKind(this.handCards, multiples1);
                     hand2 = getThreeOfAKind(h.handCards, multiples2);
                     if (hand1 != null && hand2 != null)
@@ -84,8 +84,8 @@ public class Hand implements Comparable<Hand>
                     }
 
                 case TWO_PAIR:
-                    multiples1 = getCardsMultiples(this.handCards);
-                    multiples2 = getCardsMultiples(h.handCards);
+                    multiples1 = findCardsRankMultiples(this.handCards);
+                    multiples2 = findCardsRankMultiples(h.handCards);
                     hand1 = getPair(this.handCards, multiples1, false);
                     hand2 = getPair(h.handCards, multiples2, false);
                     if (hand1 != null && hand2 != null)
