@@ -11,9 +11,11 @@ import static game.CardUtils.*;
 
 public class Game
 {
-    public static final int MAX_PLAYERS = 4;
+    public static void main(String[] args) {
+        new Game().play();
+    }
 
-    public Game()
+    public void play()
     {
         Table table = new Table();
         Player player1 = new Player();

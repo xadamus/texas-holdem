@@ -7,6 +7,8 @@ import entities.Table;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static game.CardUtils.getHand;
 import static game.CardUtils.mergeCardLists;
@@ -20,9 +22,11 @@ public class ProbabilityTest implements Runnable
         t.start();
     }
 
-    private Table table;
-    private Player player;
-    private int[] hands = new int[10];
+    private static final Logger LOG = Logger.getLogger(ProbabilityTest.class.getName());
+
+    private final Table table;
+    private final Player player;
+    private final int[] hands = new int[10];
 
     public ProbabilityTest()
     {
@@ -35,26 +39,17 @@ public class ProbabilityTest implements Runnable
     public void run()
     {
         int i = 0;
-        while (true)
-        {
+        do {
             table.distributeCards();
-
             List<Card> cards = mergeCardLists(Arrays.asList(player.getCards()), table.getCards());
             Hand hand = getHand(cards);
 
             hands[hand.getHandCategory().ordinal()]++;
             i++;
 
-            if (i % 100000 == 0)
-            {
-                System.out.print("i=" + i + " ");
-                for (int h : hands)
-                {
-                    double d = ((double)h/i)*100;
-                    System.out.format("%d ", h);
-                }
-                System.out.println();
+            if (i % 100000 == 0) {
+                LOG.log(Level.INFO, "{0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} | {9}", Arrays.stream(hands).boxed().toArray());
             }
-        }
+        } while (i != Integer.MAX_VALUE);
     }
 }

@@ -34,14 +34,10 @@ public class Player implements Comparable<Player>
 		bet = 0;
 		action = Action.NULL;
 	}
-	
-	public Player(int id, String name, String password, int money, int position)
-	{
-		this.id = id;
+
+	public Player(String name) {
+		this();
 		this.name = name;
-		this.password = password;
-		this.money = money;
-		this.position = position;
 	}
 
 	@Override
