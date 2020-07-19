@@ -2,6 +2,7 @@ package game;
 
 import entities.Card;
 import entities.Hand;
+import entities.HandCategory;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -73,8 +74,8 @@ class CardUtilsTest {
 
         Hand hand = CardUtils.getFourOfAKind(cards, cardsRankMultiples);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.FOUR_OF_A_KIND);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(fourOfAKind);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.FOUR_OF_A_KIND);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(fourOfAKind);
     }
 
     @Test
@@ -106,8 +107,8 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.CARD_3, Card.Suit.DIAMONDS));
         Hand hand = CardUtils.getFullHouse(cards, cardsRankMultiples);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.FULL_HOUSE);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(fullHouse);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.FULL_HOUSE);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(fullHouse);
     }
 
     @Test
@@ -138,8 +139,8 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.CARD_4, Card.Suit.SPADES));
         Hand hand = CardUtils.getFlush(cards);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.FLUSH);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(fullHouse);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.FLUSH);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(fullHouse);
     }
 
     @Test
@@ -169,8 +170,8 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.CARD_4, Card.Suit.SPADES));
         Hand hand = CardUtils.getStraight(cards);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.STRAIGHT);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(straight);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.STRAIGHT);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(straight);
     }
 
     @Test
@@ -201,8 +202,8 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.QUEEN, Card.Suit.SPADES));
         Hand hand = CardUtils.getThreeOfAKind(cards, cardsRankMultiples);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.THREE_OF_A_KIND);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(threeOfAKind);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.THREE_OF_A_KIND);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(threeOfAKind);
     }
 
     @Test
@@ -233,8 +234,8 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.CARD_2, Card.Suit.SPADES));
         Hand hand = CardUtils.getPair(cards, cardsRankMultiples, false);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.ONE_PAIR);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(pair);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.ONE_PAIR);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(pair);
     }
 
     @Test
@@ -251,8 +252,8 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.CARD_3, Card.Suit.SPADES));
         Hand hand = CardUtils.getPair(cards, cardsRankMultiples, true);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.TWO_PAIR);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(twoPair);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.TWO_PAIR);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(twoPair);
     }
 
     @Test
@@ -268,8 +269,8 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.CARD_4, Card.Suit.SPADES));
         Hand hand = CardUtils.getHand(cards);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.ROYAL_FLUSH);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(royalFlush);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.ROYAL_FLUSH);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(royalFlush);
     }
 
     @Test
@@ -284,8 +285,8 @@ class CardUtilsTest {
                 new Card(Card.Rank.ACE, Card.Suit.SPADES));
         Hand hand = CardUtils.getHand(cards);
         assertThat(hand).isNotNull();
-        assertThat(hand.getHandCategory()).isEqualTo(Hand.HandCategory.HIGH_CARD);
-        assertThat(hand.getHandCards()).containsExactlyInAnyOrderElementsOf(cards);
+        assertThat(hand.getCategory()).isEqualTo(HandCategory.HIGH_CARD);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(cards);
     }
 
     @Test

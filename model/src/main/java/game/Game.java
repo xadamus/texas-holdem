@@ -8,6 +8,7 @@ import entities.Table;
 import java.util.*;
 
 import static game.CardUtils.*;
+import static java.lang.System.*;
 
 public class Game
 {
@@ -33,16 +34,16 @@ public class Game
         List<Card> cardsP2 = mergeCardLists(Arrays.asList(player2.getCards()), table.getCards());
         List<Card> cardsP3 = mergeCardLists(Arrays.asList(player3.getCards()), table.getCards());
 
-        System.out.println(table);
+        out.println(table);
 
-        System.out.println(player1);
-        System.out.println(cardsP1);
+        out.println(player1);
+        out.println(cardsP1);
 
-        System.out.println(player2);
-        System.out.println(cardsP2);
+        out.println(player2);
+        out.println(cardsP2);
 
-        System.out.println(player3);
-        System.out.println(cardsP3);
+        out.println(player3);
+        out.println(cardsP3);
 
         Map<Player,Hand> results = new TreeMap<>();
         results.put(player1, getHand(cardsP1));
@@ -50,8 +51,8 @@ public class Game
         results.put(player3, getHand(cardsP3));
         for (Map.Entry<Player,Hand> entry : entriesSortedByValues(results))
         {
-            System.out.println("" + entry.getKey().getName() + ": " + entry.getValue().getHandCategory()
-                + " " + entry.getValue().getHandCards());
+            out.println("" + entry.getKey().getName() + ": " + entry.getValue().getCategory()
+                + " " + entry.getValue().getCards());
         }
     }
 }

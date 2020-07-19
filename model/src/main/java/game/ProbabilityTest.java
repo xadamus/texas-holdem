@@ -44,7 +44,7 @@ public class ProbabilityTest implements Runnable
             List<Card> cards = mergeCardLists(Arrays.asList(player.getCards()), table.getCards());
             Hand hand = getHand(cards);
 
-            hands[hand.getHandCategory().ordinal()]++;
+            hands[hand.getCategory().ordinal()]++;
             i++;
 
             if (i % 100000 == 0) {

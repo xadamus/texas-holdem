@@ -2,6 +2,7 @@ package game;
 
 import entities.Card;
 import entities.Hand;
+import entities.HandCategory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,7 +82,7 @@ public class CardUtils {
                     rCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).collect(Collectors.toList()));
                 }
             }
-            return new Hand(rCards, Hand.HandCategory.FOUR_OF_A_KIND);
+            return new Hand(rCards, HandCategory.FOUR_OF_A_KIND);
         } else return null;
     }
 
@@ -91,7 +92,7 @@ public class CardUtils {
             multiples.entrySet().stream()
                     .filter(entry -> entry.getValue() == 2 || entry.getValue() == 3)
                     .forEach(entry -> rCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).collect(Collectors.toList())));
-            return new Hand(rCards, Hand.HandCategory.FULL_HOUSE);
+            return new Hand(rCards, HandCategory.FULL_HOUSE);
         } else return null;
     }
 
@@ -112,7 +113,7 @@ public class CardUtils {
             }
 
             if (rCards.size() == 5) {
-                return new Hand(rCards, Hand.HandCategory.FLUSH);
+                return new Hand(rCards, HandCategory.FLUSH);
             } else rCards.clear();
         }
 
@@ -135,7 +136,7 @@ public class CardUtils {
             }
 
             if (rCards.size() == 5) {
-                return new Hand(rCards, Hand.HandCategory.STRAIGHT);
+                return new Hand(rCards, HandCategory.STRAIGHT);
             } else rCards.clear();
         }
         return null;
@@ -148,7 +149,7 @@ public class CardUtils {
             for (Card.Rank rank : ranks) {
                 if (multiples.get(rank) == 3) {
                     rCards.addAll(cards.stream().filter(card -> card.getRank() == rank).collect(Collectors.toList()));
-                    return new Hand(rCards, Hand.HandCategory.THREE_OF_A_KIND);
+                    return new Hand(rCards, HandCategory.THREE_OF_A_KIND);
                 }
             }
         }
@@ -162,10 +163,18 @@ public class CardUtils {
         for (Map.Entry<Card.Rank, Integer> entry : multiples.entrySet()) {
             if (entry.getValue() == 2) {
                 rCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).collect(Collectors.toList()));
+                cards.removeAll(rCards);
                 pairNum++;
 
-                if (twoPair ? (pairNum == 2) : (pairNum == 1))
-                    return new Hand(rCards, (twoPair) ? Hand.HandCategory.TWO_PAIR : Hand.HandCategory.ONE_PAIR);
+                if (twoPair ? (pairNum == 2) : (pairNum == 1)) {
+                    if (twoPair) {
+                        rCards.addAll(pickHighestCards(cards, 1));
+                        return new Hand(rCards, HandCategory.TWO_PAIR);
+                    } else {
+                        rCards.addAll(pickHighestCards(cards, 3));
+                        return new Hand(rCards, HandCategory.ONE_PAIR);
+                    }
+                }
             }
         }
         return null;
@@ -185,11 +194,10 @@ public class CardUtils {
 
         Hand straightHand = getStraight(cards);
         if (straightHand != null && hand != null) { // flush?
-            if (straightHand.getHandCards().get(0).getRank() == Card.Rank.CARD_10) // royal flush?
-            {
-                return new Hand(straightHand.getHandCards(), Hand.HandCategory.ROYAL_FLUSH);
+            if (straightHand.getCards().get(0).getRank() == Card.Rank.CARD_10) { // royal flush?
+                return new Hand(straightHand.getCards(), HandCategory.ROYAL_FLUSH);
             }
-            return new Hand(straightHand.getHandCards(), Hand.HandCategory.STRAIGHT_FLUSH);
+            return new Hand(straightHand.getCards(), HandCategory.STRAIGHT_FLUSH);
         }
 
         if (hand != null) return hand; // flush
@@ -205,7 +213,7 @@ public class CardUtils {
         hand = getPair(cards, multiples, false); // one pair
         if (hand != null) return hand;
 
-        return new Hand(cards, Hand.HandCategory.HIGH_CARD);
+        return new Hand(cards, HandCategory.HIGH_CARD);
     }
 
     /**
