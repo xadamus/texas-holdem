@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class CardDeck 
 {
-	private static final int AMOUNT_OF_CARDS = 52;
+	public static final int AMOUNT_OF_CARDS = 52;
 
 	private final Card[] gameCards = new Card[AMOUNT_OF_CARDS];
 	private final Card[] cards = new Card[AMOUNT_OF_CARDS];
@@ -24,9 +24,8 @@ public class CardDeck
 		}
 	}
 
-	public Card[] getGameCards()
-	{
-		return gameCards;
+	public Card[] getCards() {
+		return cards;
 	}
 
 	public void shuffle()

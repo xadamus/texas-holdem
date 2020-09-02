@@ -9,8 +9,8 @@ public class Card implements Comparable<Card>
 	
 	public Card(Rank r, Suit s)
 	{
-		rank = r; //j
-		suit = s; //i
+		rank = r;
+		suit = s;
 	}
 	
 	public Rank getRank()
