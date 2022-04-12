@@ -13,12 +13,14 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 class CardUtilsTest {
 
     @Test
-    void mergeCardLists() {
+    void merging_card_lists() {
         Card card1 = new Card(Card.Rank.ACE, Card.Suit.HEARTS);
         Card card2 = new Card(Card.Rank.KING, Card.Suit.CLUBS);
+
         List<Card> mergedCardList = CardUtils.mergeCardLists(Collections.singletonList(card1),
                 Collections.singletonList(card2));
-        assertThat(mergedCardList).containsExactlyInAnyOrder(card1, card2);
+
+        assertThat(mergedCardList).containsExactly(card1, card2);
     }
 
     @Test
@@ -250,7 +252,9 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.QUEEN, Card.Suit.DIAMONDS));
         cards.add(new Card(Card.Rank.CARD_3, Card.Suit.DIAMONDS));
         cards.add(new Card(Card.Rank.CARD_3, Card.Suit.SPADES));
+
         Hand hand = CardUtils.getPair(cards, cardsRankMultiples, true);
+
         assertThat(hand).isNotNull();
         assertThat(hand.getCategory()).isEqualTo(HandCategory.TWO_PAIR);
         assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(twoPair);
