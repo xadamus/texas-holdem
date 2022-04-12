@@ -1,0 +1,26 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'nl.jqno.equalsverifier:equalsverifier:3.10'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.assertj:assertj-core:3.22.0'
+}
+
+application {
+    mainClass = 'game.Game'
+}
+
+group = 'com.xadamus'
+version = '0.0.1-SNAPSHOT'
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

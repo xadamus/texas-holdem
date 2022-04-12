@@ -40,3 +40,6 @@ gradle-app.setting
 
 # End of https://www.gitignore.io/api/java,gradle
 /model/build/tmp/jar/MANIFEST.MF
+
+# Ignore Gradle build output directory
+build

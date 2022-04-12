@@ -234,10 +234,17 @@ class CardUtilsTest {
         cards.add(new Card(Card.Rank.ACE, Card.Suit.SPADES));
         cards.add(new Card(Card.Rank.QUEEN, Card.Suit.SPADES));
         cards.add(new Card(Card.Rank.CARD_2, Card.Suit.SPADES));
+
         Hand hand = CardUtils.getPair(cards, cardsRankMultiples, false);
+
         assertThat(hand).isNotNull();
         assertThat(hand.getCategory()).isEqualTo(HandCategory.ONE_PAIR);
-        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(pair);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(List.of(
+                new Card(Card.Rank.CARD_8, Card.Suit.HEARTS),
+                new Card(Card.Rank.CARD_8, Card.Suit.DIAMONDS),
+                new Card(Card.Rank.ACE, Card.Suit.SPADES),
+                new Card(Card.Rank.QUEEN, Card.Suit.SPADES),
+                new Card(Card.Rank.CARD_4, Card.Suit.SPADES)));
     }
 
     @Test
@@ -257,7 +264,12 @@ class CardUtilsTest {
 
         assertThat(hand).isNotNull();
         assertThat(hand.getCategory()).isEqualTo(HandCategory.TWO_PAIR);
-        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(twoPair);
+        assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(List.of(
+                new Card(Card.Rank.CARD_8, Card.Suit.HEARTS),
+                new Card(Card.Rank.CARD_8, Card.Suit.DIAMONDS),
+                new Card(Card.Rank.CARD_10, Card.Suit.HEARTS),
+                new Card(Card.Rank.CARD_10, Card.Suit.CLUBS),
+                new Card(Card.Rank.QUEEN, Card.Suit.DIAMONDS)));
     }
 
     @Test

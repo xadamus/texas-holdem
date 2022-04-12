@@ -157,21 +157,22 @@ public class CardUtils {
     }
 
     public static Hand getPair(List<Card> cards, Map<Card.Rank, Integer> multiples, boolean twoPair) {
+        List<Card> mergedCards = new ArrayList<>(cards);
         List<Card> rCards = new ArrayList<>();
         int pairNum = 0;
 
         for (Map.Entry<Card.Rank, Integer> entry : multiples.entrySet()) {
             if (entry.getValue() == 2) {
-                rCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).collect(Collectors.toList()));
-                cards.removeAll(rCards);
+                rCards.addAll(mergedCards.stream().filter(card -> card.getRank() == entry.getKey()).toList());
+                mergedCards.removeAll(rCards);
                 pairNum++;
 
                 if (twoPair ? (pairNum == 2) : (pairNum == 1)) {
                     if (twoPair) {
-                        rCards.addAll(pickHighestCards(cards, 1));
+                        rCards.addAll(pickHighestCards(mergedCards, 1));
                         return new Hand(rCards, HandCategory.TWO_PAIR);
                     } else {
-                        rCards.addAll(pickHighestCards(cards, 3));
+                        rCards.addAll(pickHighestCards(mergedCards, 3));
                         return new Hand(rCards, HandCategory.ONE_PAIR);
                     }
                 }
