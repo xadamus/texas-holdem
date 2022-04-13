@@ -76,80 +76,85 @@ public class CardUtils {
 
     public static Hand getFourOfAKind(List<Card> cards, Map<Card.Rank, Integer> multiples) {
         if (multiples.containsValue(4)) {
-            List<Card> rCards = new ArrayList<>(4);
+            List<Card> handCards = new ArrayList<>(4);
+            List<Card> supplementaryCards = new ArrayList<>(cards);
             for (Map.Entry<Card.Rank, Integer> entry : multiples.entrySet()) {
                 if (entry.getValue() == 4) {
-                    rCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).collect(Collectors.toList()));
+                    handCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).toList());
+                    supplementaryCards.removeAll(handCards);
+                    break;
                 }
             }
-            return new Hand(rCards, HandCategory.FOUR_OF_A_KIND);
+            return new Hand(handCards, supplementaryCards, HandCategory.FOUR_OF_A_KIND);
         } else return null;
     }
 
     public static Hand getFullHouse(List<Card> cards, Map<Card.Rank, Integer> multiples) {
         if (multiples.containsValue(3) && multiples.containsValue(2)) {
-            List<Card> rCards = new ArrayList<>(5);
+            List<Card> handCards = new ArrayList<>(5);
             multiples.entrySet().stream()
                     .filter(entry -> entry.getValue() == 2 || entry.getValue() == 3)
-                    .forEach(entry -> rCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).collect(Collectors.toList())));
-            return new Hand(rCards, HandCategory.FULL_HOUSE);
+                    .forEach(entry -> handCards.addAll(cards.stream().filter(card -> card.getRank() == entry.getKey()).toList()));
+            return new Hand(handCards, Collections.emptyList(), HandCategory.FULL_HOUSE);
         } else return null;
     }
 
     public static Hand getFlush(List<Card> cards) {
-        List<Card> rCards = new ArrayList<>(5);
+        List<Card> handCards = new ArrayList<>(5);
         ListIterator<Card> iter = cards.listIterator();
 
         while (iter.hasNext()) {
             Card card = iter.next();
             ListIterator<Card> innerIter = cards.listIterator(iter.nextIndex());
-            rCards.add(card);
+            handCards.add(card);
 
             while (innerIter.hasNext()) {
                 Card card2 = innerIter.next();
                 if (card.getSuit() == card2.getSuit()) {
-                    rCards.add(card2);
+                    handCards.add(card2);
                 }
             }
 
-            if (rCards.size() == 5) {
-                return new Hand(rCards, HandCategory.FLUSH);
-            } else rCards.clear();
+            if (handCards.size() == 5) {
+                return new Hand(handCards, Collections.emptyList(), HandCategory.FLUSH);
+            } else handCards.clear();
         }
 
         return null;
     }
 
     public static Hand getStraight(List<Card> cards) {
-        List<Card> rCards = new ArrayList<>(5);
+        List<Card> handCards = new ArrayList<>(5);
 
         for (Card card : cards) {
             ListIterator<Card> innerIter = cards.listIterator();
-            rCards.add(card);
+            handCards.add(card);
 
             while (innerIter.hasNext()) {
                 Card cCard = innerIter.next();
                 if (((card.getRank().ordinal() + 1) == cCard.getRank().ordinal() && card != cCard) || (card.getRank() == Card.Rank.ACE && cCard.getRank() == Card.Rank.CARD_2)) {
-                    rCards.add(cCard);
+                    handCards.add(cCard);
                     card = cCard;
                 }
             }
 
-            if (rCards.size() == 5) {
-                return new Hand(rCards, HandCategory.STRAIGHT);
-            } else rCards.clear();
+            if (handCards.size() == 5) {
+                return new Hand(handCards, Collections.emptyList(), HandCategory.STRAIGHT);
+            } else handCards.clear();
         }
         return null;
     }
 
     public static Hand getThreeOfAKind(List<Card> cards, Map<Card.Rank, Integer> multiples) {
         if (multiples.containsValue(3)) {
-            List<Card> rCards = new ArrayList<>(3);
+            List<Card> handCards = new ArrayList<>(3);
+            List<Card> supplementaryCards = new ArrayList<>(cards);
             SortedSet<Card.Rank> ranks = new TreeSet<>(multiples.keySet());
             for (Card.Rank rank : ranks) {
                 if (multiples.get(rank) == 3) {
-                    rCards.addAll(cards.stream().filter(card -> card.getRank() == rank).collect(Collectors.toList()));
-                    return new Hand(rCards, HandCategory.THREE_OF_A_KIND);
+                    handCards.addAll(cards.stream().filter(card -> card.getRank() == rank).collect(Collectors.toList()));
+                    supplementaryCards.removeAll(handCards);
+                    return new Hand(handCards, supplementaryCards, HandCategory.THREE_OF_A_KIND);
                 }
             }
         }
@@ -158,22 +163,20 @@ public class CardUtils {
 
     public static Hand getPair(List<Card> cards, Map<Card.Rank, Integer> multiples, boolean twoPair) {
         List<Card> mergedCards = new ArrayList<>(cards);
-        List<Card> rCards = new ArrayList<>();
+        List<Card> handCards = new ArrayList<>();
         int pairNum = 0;
 
         for (Map.Entry<Card.Rank, Integer> entry : multiples.entrySet()) {
             if (entry.getValue() == 2) {
-                rCards.addAll(mergedCards.stream().filter(card -> card.getRank() == entry.getKey()).toList());
-                mergedCards.removeAll(rCards);
+                handCards.addAll(mergedCards.stream().filter(card -> card.getRank() == entry.getKey()).toList());
+                mergedCards.removeAll(handCards);
                 pairNum++;
 
                 if (twoPair ? (pairNum == 2) : (pairNum == 1)) {
                     if (twoPair) {
-                        rCards.addAll(pickHighestCards(mergedCards, 1));
-                        return new Hand(rCards, HandCategory.TWO_PAIR);
+                        return new Hand(handCards, pickHighestCards(mergedCards, 1), HandCategory.TWO_PAIR);
                     } else {
-                        rCards.addAll(pickHighestCards(mergedCards, 3));
-                        return new Hand(rCards, HandCategory.ONE_PAIR);
+                        return new Hand(handCards, pickHighestCards(mergedCards, 3), HandCategory.ONE_PAIR);
                     }
                 }
             }
@@ -196,9 +199,9 @@ public class CardUtils {
         Hand straightHand = getStraight(cards);
         if (straightHand != null && hand != null) { // flush?
             if (straightHand.getCards().get(0).getRank() == Card.Rank.CARD_10) { // royal flush?
-                return new Hand(straightHand.getCards(), HandCategory.ROYAL_FLUSH);
+                return new Hand(straightHand.getCards(), Collections.emptyList(), HandCategory.ROYAL_FLUSH);
             }
-            return new Hand(straightHand.getCards(), HandCategory.STRAIGHT_FLUSH);
+            return new Hand(straightHand.getCards(), Collections.emptyList(), HandCategory.STRAIGHT_FLUSH);
         }
 
         if (hand != null) return hand; // flush
@@ -214,7 +217,7 @@ public class CardUtils {
         hand = getPair(cards, multiples, false); // one pair
         if (hand != null) return hand;
 
-        return new Hand(cards, HandCategory.HIGH_CARD);
+        return new Hand(cards, Collections.emptyList(), HandCategory.HIGH_CARD);
     }
 
     /**

@@ -241,10 +241,7 @@ class CardUtilsTest {
         assertThat(hand.getCategory()).isEqualTo(HandCategory.ONE_PAIR);
         assertThat(hand.getCards()).containsExactlyInAnyOrderElementsOf(List.of(
                 new Card(Card.Rank.CARD_8, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_8, Card.Suit.DIAMONDS),
-                new Card(Card.Rank.ACE, Card.Suit.SPADES),
-                new Card(Card.Rank.QUEEN, Card.Suit.SPADES),
-                new Card(Card.Rank.CARD_4, Card.Suit.SPADES)));
+                new Card(Card.Rank.CARD_8, Card.Suit.DIAMONDS)));
     }
 
     @Test
@@ -268,8 +265,7 @@ class CardUtilsTest {
                 new Card(Card.Rank.CARD_8, Card.Suit.HEARTS),
                 new Card(Card.Rank.CARD_8, Card.Suit.DIAMONDS),
                 new Card(Card.Rank.CARD_10, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_10, Card.Suit.CLUBS),
-                new Card(Card.Rank.QUEEN, Card.Suit.DIAMONDS)));
+                new Card(Card.Rank.CARD_10, Card.Suit.CLUBS)));
     }
 
     @Test

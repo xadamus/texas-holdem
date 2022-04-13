@@ -9,6 +9,7 @@ repositories {
 dependencies {
     implementation 'com.google.guava:guava:31.1-jre'
     implementation 'nl.jqno.equalsverifier:equalsverifier:3.10'
+    implementation 'org.apache.commons:commons-collections4:4.4'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
     testImplementation 'org.assertj:assertj-core:3.22.0'

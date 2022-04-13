@@ -64,16 +64,23 @@ class HandTest {
 
     @Test
     void compareToTest_equalPair() {
-        Hand lowerPair = new Hand(List.of(new Card(Card.Rank.CARD_2, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_2, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_6, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_8, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_10, Card.Suit.SPADES)), HandCategory.ONE_PAIR);
-        Hand higherPair = new Hand(List.of(new Card(Card.Rank.CARD_2, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_2, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_7, Card.Suit.HEARTS),
-                new Card(Card.Rank.CARD_9, Card.Suit.HEARTS),
-                new Card(Card.Rank.JACK, Card.Suit.SPADES)), HandCategory.ONE_PAIR);
+        Hand lowerPair = new Hand(
+                List.of(
+                        new Card(Card.Rank.CARD_2, Card.Suit.HEARTS),
+                        new Card(Card.Rank.CARD_2, Card.Suit.HEARTS)),
+                List.of(new Card(Card.Rank.CARD_6, Card.Suit.HEARTS),
+                        new Card(Card.Rank.CARD_8, Card.Suit.HEARTS),
+                        new Card(Card.Rank.CARD_10, Card.Suit.SPADES)),
+                HandCategory.ONE_PAIR);
+        Hand higherPair = new Hand(
+                List.of(
+                        new Card(Card.Rank.CARD_2, Card.Suit.HEARTS),
+                        new Card(Card.Rank.CARD_2, Card.Suit.HEARTS)),
+                List.of(new Card(Card.Rank.CARD_7, Card.Suit.HEARTS),
+                        new Card(Card.Rank.CARD_9, Card.Suit.HEARTS),
+                        new Card(Card.Rank.JACK, Card.Suit.SPADES)),
+                HandCategory.ONE_PAIR);
+
         assertThat(lowerPair).isLessThan(higherPair);
     }
 
@@ -89,6 +96,7 @@ class HandTest {
                 new Card(Card.Rank.CARD_5, Card.Suit.HEARTS),
                 new Card(Card.Rank.CARD_6, Card.Suit.HEARTS),
                 new Card(Card.Rank.CARD_7, Card.Suit.SPADES)), HandCategory.STRAIGHT);
+
         assertThat(lowerStraight).isLessThan(higherStraight);
     }
 }
