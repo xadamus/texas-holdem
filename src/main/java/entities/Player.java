@@ -1,49 +1,31 @@
 package entities;
 
-import java.io.PrintWriter;
-
+import java.util.Objects;
 
 public class Player implements Comparable<Player>
 {
-	// SQLite
-	private int id;
 	private String name;
-	private String password;
-	private int money;
 	
-	private boolean logged;
-	private boolean playing;
-	
-	private boolean ready;
-	private int bet;
-	
-	private Card[] cards = new Card[2];
-	private int position;
-	
-	// Server side
-	private PrintWriter out;
-	public enum Action { NULL, CALL, FOLD, RAISE, SMALL, BIG }
-	private Action action;
-	private int actionAmount;
-	
-	public Player()
-	{
-		logged = false;
-		playing = false;
-		ready = false;
-		bet = 0;
-		action = Action.NULL;
-	}
-
-	public Player(String name) {
-		this();
-		this.name = name;
-	}
+	private final Card[] cards = new Card[2];
 
 	@Override
 	public int compareTo(Player o)
 	{
 		return this.name.compareTo(o.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (obj instanceof Player that) {
+			return Objects.equals(this.name, that.name);
+		}
+		return false;
 	}
 
 	public void setName(String name)
@@ -54,26 +36,6 @@ public class Player implements Comparable<Player>
 	public String getName()
 	{
 		return name;
-	}
-	
-	public void setMoney(int money)
-	{
-		this.money = money;
-	}
-	
-	public void addMoney(int money)
-	{
-		this.money += money;
-	}
-	
-	public int getMoney()
-	{
-		return money;
-	}
-	
-	public int getId()
-	{
-		return id;
 	}
 	
 	public void giveCards(Card card1, Card card2)
@@ -87,95 +49,8 @@ public class Player implements Comparable<Player>
 		return cards;
 	}
 	
-	public void setLogged(boolean logged)
-	{
-		this.logged = logged;
-	}
-	
-	public boolean isLogged()
-	{
-		return logged;
-	}
-	
-	public void setPosition(int position)
-	{
-		this.position = position;
-	}
-	
-	public int getPosition()
-	{
-		return position;
-	}
-	
-	public void setPlaying(boolean playing)
-	{
-		this.playing = playing;
-	}
-	
-	public boolean isPlaying()
-	{
-		return playing;
-	}
-	
-	public void setReady(boolean ready)
-	{
-		this.ready = ready;
-	}
-	
-	public boolean isReady()
-	{
-		return ready;
-	}
-	
-	public void setBet(int bet)
-	{
-		this.bet = bet;
-	}
-	
-	public int getBet()
-	{
-		return bet;
-	}
-	
-	public void addBet(int bet)
-	{
-		this.money -= bet;
-		this.bet += bet;
-	}
-	
 	public String toString()
 	{
 		return "[name: " + name + "][cards: " + cards[0] + " " + cards[1] + "]";
-	}
-	
-	// Server side
-	public void setOut(PrintWriter out)
-	{
-		this.out = out;
-	}
-	
-	public PrintWriter getOut()
-	{
-		return out;
-	}
-	
-	public void setAction(Action action)
-	{
-		this.action = action;
-	}
-	
-	public Action getAction()
-	{
-		return action;
-	}
-	
-	public void setActionAmount(int amount)
-	{
-		this.actionAmount = amount;
-	}
-	
-	public int getActionAmount()
-	{
-		return actionAmount;
 	}
 }

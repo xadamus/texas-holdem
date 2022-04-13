@@ -1,9 +1,8 @@
 package entities;
 
-import com.google.common.collect.Collections2;
-import org.apache.commons.collections4.CollectionUtils;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class Hand implements Comparable<Hand> {
 

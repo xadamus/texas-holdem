@@ -5,7 +5,6 @@ import entities.Hand;
 import entities.HandCategory;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CardUtils {
     private CardUtils() {
@@ -152,7 +151,7 @@ public class CardUtils {
             SortedSet<Card.Rank> ranks = new TreeSet<>(multiples.keySet());
             for (Card.Rank rank : ranks) {
                 if (multiples.get(rank) == 3) {
-                    handCards.addAll(cards.stream().filter(card -> card.getRank() == rank).collect(Collectors.toList()));
+                    handCards.addAll(cards.stream().filter(card -> card.getRank() == rank).toList());
                     supplementaryCards.removeAll(handCards);
                     return new Hand(handCards, supplementaryCards, HandCategory.THREE_OF_A_KIND);
                 }
@@ -172,12 +171,10 @@ public class CardUtils {
                 mergedCards.removeAll(handCards);
                 pairNum++;
 
-                if (twoPair ? (pairNum == 2) : (pairNum == 1)) {
-                    if (twoPair) {
-                        return new Hand(handCards, pickHighestCards(mergedCards, 1), HandCategory.TWO_PAIR);
-                    } else {
-                        return new Hand(handCards, pickHighestCards(mergedCards, 3), HandCategory.ONE_PAIR);
-                    }
+                if (twoPair && pairNum == 2) {
+                    return new Hand(handCards, pickHighestCards(mergedCards, 1), HandCategory.TWO_PAIR);
+                } else if (!twoPair) {
+                    return new Hand(handCards, pickHighestCards(mergedCards, 3), HandCategory.ONE_PAIR);
                 }
             }
         }
